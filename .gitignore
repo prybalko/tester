@@ -102,3 +102,13 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Unit test / coverage reports
+.cache
+.coverage
+.pytest_cache
+.tox
+nosetests.xml
+
+.idea/
+my_database.db
