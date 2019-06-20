@@ -1,17 +1,9 @@
 import time
 
-import pytest
-
-
-def f():
-    raise SystemExit(1)
-
 
 def test_mytest():
     time.sleep(1)
-    raise Exception()
-    with pytest.raises(SystemExit):
-        f()
+    raise Exception("that's the reason this test failed")
 
 
 class TestClass:

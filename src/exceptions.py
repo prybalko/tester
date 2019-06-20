@@ -1,0 +1,2 @@
+class BashTestFailure(SystemExit):
+    pass
