@@ -1,7 +1,7 @@
 from _pytest import nodes
 from _pytest.python import PyCollector
 
-from src.items import BashItem
+from tester.items import BashItem
 
 
 class BashCollector(nodes.File, PyCollector):

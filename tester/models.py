@@ -1,7 +1,6 @@
-from peewee import *
 import datetime
-import pytest
 
+from peewee import *
 
 db = SqliteDatabase('my_database.db')
 
@@ -18,14 +17,3 @@ class Test(Model):
 
     class Meta:
         database = db
-
-
-if __name__ == '__main__':
-    db.connect()
-    db.create_tables([Test])
-
-    status_code = pytest.main()
-
-    db.close()
-
-    raise SystemExit(status_code)

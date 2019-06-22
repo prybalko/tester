@@ -2,8 +2,8 @@ import datetime
 
 import pytest
 
-from src.collector import BashCollector
-from src.tester import Test
+from tester.collector import BashCollector
+from tester.models import Test
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
