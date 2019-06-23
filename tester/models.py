@@ -1,19 +1,24 @@
 import datetime
+import os
 
-from peewee import *
+from peewee import AutoField, DateTimeField, TextField, Model, SqliteDatabase, IntegerField
 
-db = SqliteDatabase('my_database.db')
+
+module_path = os.path.dirname(os.path.realpath(__file__))
+
+DB = SqliteDatabase(f'{module_path}/tester.db')
 
 
 class Test(Model):
     id = AutoField()
+    pid = IntegerField(default=os.getpid)
     environment = TextField(default='local')
     test = TextField()
     created_at = DateTimeField(default=datetime.datetime.now)
     started_at = DateTimeField(null=True)
     finished_at = DateTimeField(null=True)
-    status = TextField(default='pending')
+    status = TextField(default='pending', index=True)
     logs = TextField(null=True)
 
     class Meta:
-        database = db
+        database = DB

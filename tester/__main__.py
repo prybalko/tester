@@ -1,42 +1,7 @@
 import argparse
 import sys
-import datetime
-import pytest
 
-from tester.helpers import Command
-from tester.models import db, Test
-
-
-class StartCommand(Command):
-
-    """Start running tests."""
-
-    def __init__(self):
-        opts = {'tests': {'type': str,
-                          'nargs': '*'},
-                }
-        super(StartCommand, self).__init__('start', opts)
-
-    def run(self, tests=None):
-        db.connect()
-        db.create_tables([Test])
-
-        status_code = pytest.main(args=tests)
-
-        db.close()
-        return status_code
-
-
-class StatusCommand(Command):
-
-    """Get status of running tests."""
-
-    def __init__(self):
-        opts = {}
-        super(StatusCommand, self).__init__('status', opts)
-
-    def run(self):
-        print("status")
+from tester.commands import StartCommand, StatusCommand, RunCommand
 
 
 def main():
@@ -44,9 +9,11 @@ def main():
 
     subparsers = parser.add_subparsers(title="Tester commands")
 
-    commands = [StartCommand(),
-                StatusCommand(),
-                ]
+    commands = [
+        StartCommand(),
+        StatusCommand(),
+        RunCommand(),
+    ]
 
     for command in commands:
         cmd_parser = subparsers.add_parser(command.name)
@@ -57,7 +24,7 @@ def main():
 
     if len(sys.argv) == 1:
         parser.print_help()
-        sys.exit(0)
+        raise SystemExit(0)
 
     args = parser.parse_args()
     func = args.func

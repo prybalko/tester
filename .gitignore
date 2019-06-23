@@ -111,4 +111,4 @@ venv.bak/
 nosetests.xml
 
 .idea/
-my_database.db
+tester.db

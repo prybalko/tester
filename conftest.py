@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from tester.collector import BashCollector
+from tester.collectors import BashCollector
 from tester.models import Test
 
 
@@ -12,7 +12,6 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     rep = outcome.get_result()
 
-    # we only look at actual test calls, not setup/teardown
     if rep.when == "call":
         test = Test.get(id=item.test_id)
         test.status = rep.outcome
@@ -25,6 +24,7 @@ def pytest_runtest_makereport(item, call):
 def pytest_runtest_setup(item):
     test = Test.get(id=item.test_id)
     test.started_at = datetime.datetime.now()
+    test.status = 'running'
     test.save()
 
 

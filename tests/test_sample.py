@@ -2,8 +2,7 @@ import time
 
 
 def test_mytest():
-    pass
-    # time.sleep(.1)
+    time.sleep(20)
     # raise Exception("that's the reason this test failed")
 
 
