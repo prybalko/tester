@@ -1,3 +1,5 @@
+"""Collectors for test discovery."""
+
 from _pytest import nodes
 from _pytest.python import PyCollector
 

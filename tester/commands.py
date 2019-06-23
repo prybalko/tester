@@ -1,8 +1,11 @@
+""" Implementation of the commands for CLI scripts. """
+
 import contextlib
 import os
 
 import pytest
 
+from tester.lib import is_pid_running
 from tester.models import DB, Test
 
 
@@ -26,12 +29,12 @@ class Command:
 
 class RunCommand(Command):
 
-    """Start process in the background."""
+    """Run tests."""
 
-    def __init__(self):
+    def __init__(self, name='run'):
         opts = {'tests': {'type': str,
                           'nargs': '*'}}
-        super(RunCommand, self).__init__('run', opts)
+        super(RunCommand, self).__init__(name, opts)
 
     def run(self, tests=None):
         with DB.connection_context():
@@ -41,12 +44,10 @@ class RunCommand(Command):
 
 class StartCommand(RunCommand):
 
-    """Start running tests."""
+    """Start tests in the background."""
 
     def __init__(self):
-        opts = {'tests': {'type': str,
-                          'nargs': '*'}}
-        super(RunCommand, self).__init__('start', opts)
+        super(StartCommand, self).__init__('start')
 
     def run(self, tests=None):
         pid = os.fork()
@@ -61,7 +62,7 @@ class StartCommand(RunCommand):
 
 class StatusCommand(Command):
 
-    """Get status of running tests."""
+    """Get status of tests."""
 
     def __init__(self):
         opts = {}
@@ -73,15 +74,7 @@ class StatusCommand(Command):
         print(row_format.format(*columns))
 
         for test in Test.select(*[getattr(Test, field) for field in columns]):
-            if test.status in ('pending', 'running') and not self._is_pid_alive(test.pid):
+            if test.status in ('pending', 'running') and not is_pid_running(test.pid):
                 test.status = 'interrupted'
                 test.save()
             print(row_format.format(*[getattr(test, field) for field in columns]))
-
-    def _is_pid_alive(self, pid):
-        """ Check for the existence of a unix pid. """
-        try:
-            os.kill(pid, 0)
-        except OSError:
-            return False
-        return True

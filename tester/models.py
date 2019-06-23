@@ -1,15 +1,15 @@
+""" Data storage models """
+
 import datetime
 import os
 
-from peewee import AutoField, DateTimeField, TextField, Model, SqliteDatabase, IntegerField
+from peewee import AutoField, DateTimeField, TextField, Model, IntegerField
 
-
-module_path = os.path.dirname(os.path.realpath(__file__))
-
-DB = SqliteDatabase(f'{module_path}/tester.db')
+from tester import DB
 
 
 class Test(Model):
+    """ The main model for storing tests metadata. """
     id = AutoField()
     pid = IntegerField(default=os.getpid)
     environment = TextField(default='local')
