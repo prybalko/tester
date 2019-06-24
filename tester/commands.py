@@ -31,9 +31,11 @@ class RunCommand(Command):
 
     """Run tests."""
 
-    def __init__(self, name='run'):
-        opts = {'tests': {'type': str,
-                          'nargs': '*'}}
+    def __init__(self, name='run', opts=None):
+        if not opts:
+            opts = {'tests': {'type': str,
+                              'nargs': '*',
+                              'help': 'Run tests in the foreground'}}
         super(RunCommand, self).__init__(name, opts)
 
     def run(self, tests=None):
@@ -47,7 +49,10 @@ class StartCommand(RunCommand):
     """Start tests in the background."""
 
     def __init__(self):
-        super(StartCommand, self).__init__('start')
+        opts = {'tests': {'type': str,
+                          'nargs': '*',
+                          'help': 'Run tests in the background'}}
+        super(StartCommand, self).__init__('start', opts)
 
     def run(self, tests=None):
         pid = os.fork()
