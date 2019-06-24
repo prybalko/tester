@@ -10,5 +10,6 @@ setup(
         'console_scripts': [
             'tester = tester.__main__:main'
         ],
+        "pytest11": ["pytest_tester = tester.pytest_hooks"]
     },
 )

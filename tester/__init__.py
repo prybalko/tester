@@ -1,5 +1,7 @@
 """
 tester: advanced unit and functional testing with Python.
+
+PYTEST_DONT_REWRITE
 """
 import os
 
