@@ -1,5 +1,5 @@
 ===============
-tester
+Tester
 ===============
 
 Command-line software in Python 3 that is able to run tests implemented in Python and Bash scripts.
@@ -18,6 +18,7 @@ Tech
 Tester uses some open source projects to work properly:
 
 * `pytest <https://docs.pytest.org/en/latest/>`_ - test framework.
+* `pytest-xdist <https://docs.pytest.org/en/3.0.0/xdist.html>`_ - pytest plugin for distributed testing.
 * `peewee <http://docs.peewee-orm.com/en/latest/>`_ - simple and small ORM.
 
 Usage
@@ -63,8 +64,33 @@ Get tests status
 	 3         23401     tests/test_sample.py::TestClass::test_one         passed
 
 
+Distributed testing
+___________________
+Distributed test execution is delegated to `pytest-xdist <https://docs.pytest.org/en/3.0.0/xdist.html>`_ plugin.
+
+To send tests to multiple CPUs, type:
+
+.. code-block:: bash
+
+	$ tester start -n NUM
+
+To send tests to remote SSH account:
+
+.. code-block:: bash
+
+	$ tester start -d --tx ssh=myhostpopen --rsyncdir mypkg mypkg
+
+This will synchronize your mypkg package directory to a remote ssh account and then locally collect tests and send them to remote places for execution.
+
+The basic command to run tests on multiple platforms is:
+
+.. code-block:: bash
+
+	$ tester start --dist=each --tx=spec1 --tx=spec2
+
+For more information please see `pytest-xdist <https://docs.pytest.org/en/3.0.0/xdist.html>`_  docs.
+
 Todos
 -----
 
-* write more tests
-* implement the concept of virtual environments, i.e. software  must make sure that just one test will run in each virtual environment.
+* add more tests

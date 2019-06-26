@@ -27,10 +27,9 @@ def main():
         parser.print_help()
         raise SystemExit(0)
 
-    args = parser.parse_args()
+    args, unknown = parser.parse_known_args()
     func = args.func
-    del args.func
-    func(**vars(args))
+    func(sys.argv[2:])
 
 
 raise SystemExit(main())

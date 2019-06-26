@@ -35,13 +35,22 @@ class RunCommand(Command):
         if not opts:
             opts = {'tests': {'type': str,
                               'nargs': '*',
-                              'help': 'Run tests in the foreground'}}
+                              'help': 'Run tests in the foreground'},
+                    "--tx": {'dest': 'tx',
+                             'action': 'append',
+                             'default': [],
+                             'help': (
+                                 "add a test execution environment. some examples: "
+                                 "--tx popen//python=python2.5 --tx socket=192.168.1.102:8888 "
+                                 "--tx ssh=user@codespeak.net//chdir=testcache"
+                             )}
+                    }
         super(RunCommand, self).__init__(name, opts)
 
-    def run(self, tests=None):
+    def run(self, args):
         with DB.connection_context():
             DB.create_tables([Test])
-            return pytest.main(args=tests)
+            return pytest.main(args)
 
 
 class StartCommand(RunCommand):
@@ -49,12 +58,9 @@ class StartCommand(RunCommand):
     """Start tests in the background."""
 
     def __init__(self):
-        opts = {'tests': {'type': str,
-                          'nargs': '*',
-                          'help': 'Run tests in the background'}}
-        super(StartCommand, self).__init__('start', opts)
+        super(StartCommand, self).__init__('start')
 
-    def run(self, tests=None):
+    def run(self, args):
         pid = os.fork()
         if pid > 0:
             # Exit parent process
@@ -62,7 +68,7 @@ class StartCommand(RunCommand):
 
         with open(os.devnull, 'w') as devnull:
             with contextlib.redirect_stdout(devnull):
-                super().run(tests)
+                super().run(args)
 
 
 class StatusCommand(Command):
@@ -73,7 +79,7 @@ class StatusCommand(Command):
         opts = {}
         super(StatusCommand, self).__init__('status', opts)
 
-    def run(self):
+    def run(self, args):
         columns = ('id', 'pid', 'test', 'status')
         row_format = " {:<10}{:<10}{:<50}{:<15}"
         print(row_format.format(*columns))
